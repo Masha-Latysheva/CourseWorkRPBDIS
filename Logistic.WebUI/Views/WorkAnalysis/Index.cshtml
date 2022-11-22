@@ -1,0 +1,72 @@
+﻿<p hidden="hidden" class="text-center" style="color: red;" id="errorLabel"></p>
+<div class="col-6" style="margin-right: auto; margin-left: auto;">
+    <div class="row mb-1">
+        <p class="col-2">От:</p>
+        <input type="date" class="col form-control" id="firstDate"/>
+    </div>
+    <div class="row mb-1">
+        <p class="col-2">До:</p>
+        <input type="date" class="col form-control" id="secondDate"/>
+    </div>
+    <input onclick="handleFindBtnClick()" class="btn btn-primary" value="Найти" style="margin-left: auto;"/>
+</div>
+<div hidden="hidden" id="result" style="margin-right: auto; margin-left: auto;">
+    <div id="totalSum">
+
+    </div>
+    <div id="totalVolume">
+
+    </div>
+    <div id="totalWeight">
+
+    </div>
+</div>
+
+<script>
+    function handleFindBtnClick() {
+        const firstDate = new Date(document.getElementById("firstDate").value)
+        const secondDate = new Date(document.getElementById("secondDate").value)
+        if (firstDate.toString() === 'Invalid Date') {
+            console.log($('#errorLabel'))
+            $('#errorLabel').removeAttr('hidden');
+            $('#errorLabel')[0].innerHTML = 'Необходимо выбрать \'От\'';
+            return;
+        }
+        if (secondDate.toString() === 'Invalid Date') {
+            $('#errorLabel').removeAttr('hidden');
+            $('#errorLabel')[0].innerHTML = 'Необходимо выбрать \'До\'';
+            return;
+        }
+
+        if (firstDate >= secondDate) {
+            $('#errorLabel').removeAttr('hidden');
+            $('#errorLabel')[0].innerHTML = '\'До\' должно быть больше \'От\'';
+            return;
+        }
+
+        $('#errorLabel').attr('hidden', 'hidden');
+
+        getAndShowStats(firstDate, secondDate);
+    }
+
+    function getAndShowStats(firstDate, secondDate) {
+      $.get("/WorkAnalysis/Stats?firstDate=" + firstDate.toISOString() + "&secondDate=" + secondDate.toISOString(), function(data) {
+            if (data === '') {
+                $('#errorLabel').removeAttr('hidden');
+                $('#errorLabel')[0].innerHTML = 'Ничего не найдено. Выберите другой промежуток.';
+                return;
+            }
+
+            const totalDiv = document.getElementById('totalSum');
+            totalDiv.innerHTML = "Всего перевозок на сумму: " + data.TotalSum;
+
+            const totalWeight = document.getElementById('totalWeight');
+            totalWeight.innerHTML = "Всего груза на: " + data.TotalWeight + " t."
+
+            const totalVolume = document.getElementById('totalVolume');
+            totalVolume.innerHTML = "Всего груза на: " + data.TotalVolume + " m3."
+
+            $('#result').removeAttr('hidden')
+      });
+    }
+</script>

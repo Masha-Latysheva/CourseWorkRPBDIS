@@ -1,0 +1,52 @@
+﻿@model Logistic.DAL.Entities.Car
+
+@{ ViewData["Title"] = "Редактирование"; }
+
+<div class="container">
+    <h1>Обновить</h1>
+
+    <hr/>
+    <div class="row">
+        <div class="col-md-4">
+            <form method="post" asp-action="Update" asp-route-id="@Model.Id">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Mark" class="control-label"></label>
+                    <input asp-for="Mark" class="form-control"/>
+                    <span asp-validation-for="Mark" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="OrganizationId" class="control-label"></label>
+                    <select asp-for="OrganizationId" class="form-control">
+                        @foreach (var organization in ViewBag.Organizations)
+                        {
+                            <option value="@organization.Id">@organization.Name</option>
+                        }
+                    </select>
+                    <span asp-validation-for="OrganizationId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CarryingVolume" class="control-label"></label>
+                    <input asp-for="CarryingVolume" class="form-control"/>
+                    <span asp-validation-for="CarryingVolume" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CarryingWeight" class="control-label"></label>
+                    <input asp-for="CarryingWeight" class="form-control"/>
+                    <span asp-validation-for="CarryingWeight" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Сохранить" class="btn btn-success"/>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div>
+        <a asp-action="Index">Назад</a>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

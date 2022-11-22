@@ -1,0 +1,77 @@
+﻿@model DashboardViewModel
+@{
+    ViewData["Title"] = "Главная";
+}
+<div class="modal" tabindex="-1" id="routesModal" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Детали</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="routesModalBody">
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h2 class="text-center">Действия</h2>
+<div class="card-deck">
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title"><a asp-controller="WorkAnalysis" asp-action="Index">Анализ работы автомобилей за период</a></h5>
+    </div>
+  </div>
+</div>
+
+<h2 class="text-center">Количество перевозок</h2>
+<div class="card-deck">
+
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title"><a href="#" onclick="routeCardClickHandler(1)">Вчера</a></h5>
+      <p class="card-text">@Model.YesterdayRoutesCount</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title"><a href="#" onclick="routeCardClickHandler(2)">Сегодня</a></h5>
+      <p class="card-text">@Model.TodayRoutesCount</p>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title"><a href="#" onclick="routeCardClickHandler(3)">За текущий месяц</a></h5>
+      <p class="card-text">@Model.MonthRoutesCount</p>
+    </div>
+  </div>
+</div>
+
+<h2 class="text-center m-5">Количество перевозок за 14 дней</h2>
+<div class="ct-chart ct-golden-section ml-auto mr-auto" style="width: 1500px; height: 500px;" id="chart1"></div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+    function routeCardClickHandler(param) {
+      $.get("/Home/RoutesDetails?param=" + param, function(data) {
+          $('#routesModalBody').empty().html(data);
+          $('#routesModal').modal("show");
+      });
+    }
+
+    $.post('/Home/RoutesGraphicData', function(data) {
+      new Chartist.Line('#chart1', {
+            labels: data.days,
+            series: [data.counts]
+          });
+    });
+
+
+</script>

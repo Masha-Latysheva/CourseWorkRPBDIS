@@ -1,0 +1,118 @@
+﻿@model X.PagedList.IPagedList<Logistic.DAL.Entities.Car>
+@using X.PagedList.Mvc.Core
+
+<div class="container-xl">
+    <div class="table-wrapper">
+        <div class="table-title">
+            <div class="row">
+                <div class="col-sm-6">
+                    <a asp-action="Create" class="btn btn-success">
+                        <i class="material-icons">&#xE147;</i>
+                        <span>Добавить</span>
+                    </a>
+                </div>
+                <p>
+                    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseSearch" aria-expanded="false" aria-controls="collapseSearch">
+                        Показать/скрыть поиск
+                    </button>
+                </p>
+                <div id="collapseSearch" class="col collapse">
+                    <div class="col-md-12 mb-4 card">
+                        <div class="card-body">
+                            <form>
+                                <table cellpadding="3" cellspacing="0" border="0" style="width: 100%; margin: 0 auto 2em auto;">
+                                    <thead>
+                                    <tr>
+                                        <th>Kолонка</th>
+                                        <th>Текст поиска</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr data-column="0">
+                                        <td>Организация</td>
+                                        <td align="center"><input type="text" id="searchInput" class="column_filter form-control" data-toggle="tooltip" data-placement="top" name="name"/></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <input class="btn btn-info" id="searchBtn" value="Найти"/>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table class="table table-striped table-hover">
+            <thead>
+            <tr>
+                <th>
+                    Id
+                </th>
+                <th>
+                    Марка
+                </th>
+                <th>
+                    Организация
+                </th>
+                <th>
+                    Вместимость (т)
+                </th>
+                <th>
+                    Вместимость (м3)
+                </th>
+                <th>Действия</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(model => item.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => item.Mark)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => item.Organization.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => item.CarryingWeight)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => item.CarryingVolume)
+                    </td>
+                    <td>
+                        <a asp-action="Update" asp-route-id="@item.Id" class="btn btn-info">Редактирование</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-info">Удаление</a>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+        <br />
+        Страница @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) из @Model.PageCount
+
+        @if (Model.PageCount > 1)
+        {
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page }), new X.PagedList.Web.Common.PagedListRenderOptions
+            {
+                LiElementClasses = new[] { "page-item" },
+                PageClasses = new[] { "page-link" }
+            })
+        }
+    </div>
+</div>
+
+
+@section Scripts
+{
+    <script src="lib/jquery/dist/jquery.min.js"></script>
+    <script>
+        $("#searchBtn").click(function ()
+        {
+            const searchString = $("#searchInput").prop('value');
+            const url = "/Car/Index?searchString=" + searchString;
+            window.location.replace("https://localhost:5001" + url);
+        })
+    </script>
+}

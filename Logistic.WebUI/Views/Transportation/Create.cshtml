@@ -1,0 +1,81 @@
+﻿@model Logistic.DAL.Entities.Transportation
+
+@{ ViewData["Title"] = "Создание"; }
+
+<div class="container">
+    <h1>Добавление</h1>
+    <hr/>
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="CarId" class="control-label"></label>
+                    <select asp-for="CarId" class="form-control">
+                        @foreach (var car in ViewBag.Cars)
+                        {
+                            <option value="@car.Id">(#@car.Id) @car.Mark</option>
+                        }
+                    </select>
+                    <span asp-validation-for="CarId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DriverId" class="control-label"></label>
+                    <select asp-for="DriverId" class="form-control">
+                        @foreach (var driver in ViewBag.Drivers)
+                        {
+                            <option value="@driver.Id">@driver.LastName @driver.FirstName</option>
+                        }
+                    </select>
+                    <span asp-validation-for="DriverId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="RateId" class="control-label"></label>
+                    <select asp-for="RateId" class="form-control">
+                        @foreach (var rate in ViewBag.Rates)
+                        {
+                            <option value="@rate.Id">@rate.Name</option>
+                        }
+                    </select>
+                    <span asp-validation-for="RateId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="RouteId" class="control-label"></label>
+                    <select asp-for="RouteId" class="form-control">
+                        @foreach (var routes in ViewBag.Routes)
+                        {
+                            <option value="@routes.Id">@routes.Name</option>
+                        }
+                    </select>
+                    <span asp-validation-for="RouteId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CargoId" class="control-label"></label>
+                    <select asp-for="CargoId" class="form-control">
+                        @foreach (var cargo in ViewBag.Cargos)
+                        {
+                            <option value="@cargo.Id">@cargo.Name</option>
+                        }
+                    </select>
+                    <span asp-validation-for="CargoId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CargoCount" class="control-label"></label>
+                    <input asp-for="CargoCount" class="form-control"/>
+                    <span asp-validation-for="CargoCount" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Добавить" class="btn btn-primary"/>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div>
+        <a asp-action="Index">Назад</a>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
